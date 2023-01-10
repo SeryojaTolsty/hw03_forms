@@ -1,28 +1,31 @@
-from django.contrib.auth import get_user_model
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
-from .utils import paginate_page
+from django.contrib.auth.decorators import login_required
+
 from .forms import PostForm
-from .models import Group, Post
+from .models import Group, Post, User
+from .utils import paginate_page
 
-LR = 10
-# LR - LIMIT_RANGE (количество постов на странице)
 
-User = get_user_model()
+POST_PER_PAGE = 10
 
 
 def index(request):
-    post_list = Post.objects.select_related('group', 'author')
+    post_list = Post.objects.all()
     page_obj = paginate_page(request, post_list)
-    context = {'page_obj': page_obj, }
+    context = {
+        'page_obj': page_obj,
+    }
     return render(request, 'posts/index.html', context)
 
 
 def group_posts(request, slug):
     group = get_object_or_404(Group, slug=slug)
-    posts = group.posts.select_related('group')
-    page_obj = paginate_page(request, posts)
-    context = {'group': group, 'page_obj': page_obj}
+    post_list = group.posts.all()
+    page_obj = paginate_page(request, post_list)
+    context = {
+        'group': group,
+        'page_obj': page_obj,
+    }
     return render(request, 'posts/group_list.html', context)
 
 
@@ -30,40 +33,49 @@ def profile(request, username):
     author = get_object_or_404(User, username=username)
     post_list = author.posts.all()
     page_obj = paginate_page(request, post_list)
-    context = {'page_obj': page_obj, 'author': author}
+    context = {
+        'page_obj': page_obj,
+        'author': author,
+    }
     return render(request, 'posts/profile.html', context)
 
 
-def post_view(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-    context = {'post': post, }
+def post_detail(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    context = {
+        'post': post,
+        'author': post.author,
+    }
     return render(request, 'posts/post_detail.html', context)
-
-
-def easteregg(request):
-    return render(request, 'about/eastereggs.html')
 
 
 @login_required
 def post_create(request):
     form = PostForm(request.POST or None)
     if form.is_valid():
-        create_post = form.save(commit=False)
-        create_post.author = request.user
-        create_post.save()
-        return redirect('posts:profile', create_post.author)
-    context = {'form': form}
-    return render(request, 'posts/create_post.html', context)
+        post = form.save(commit=False)
+        post.author = request.user
+        post.save()
+        return redirect('posts:profile', username=post.author.username)
+
+    return render(request, 'posts/create_post.html', {'form': form})
 
 
 @login_required
 def post_edit(request, post_id):
-    edit_post = get_object_or_404(Post, id=post_id)
-    if request.user != edit_post.author:
+    post = get_object_or_404(Post, pk=post_id)
+    if post.author != request.user:
         return redirect('posts:post_detail', post_id)
-    form = PostForm(request.POST or None, instance=edit_post)
+
+    form = PostForm(request.POST or None, instance=post)
     if form.is_valid():
-        form.save()
+        post = form.save(commit=False)
+        post.author = request.user
+        post.save()
         return redirect('posts:post_detail', post_id)
-    context = {'form': form, 'is_edit': True}
+
+    context = {
+        'form': form,
+        'is_edit': True,
+    }
     return render(request, 'posts/create_post.html', context)
