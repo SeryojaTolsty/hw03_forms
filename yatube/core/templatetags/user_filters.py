@@ -5,5 +5,5 @@ register = template.Library()
 
 @register.filter
 def addclass(field, css):
-    '''применение декораторов'''
+    """Применение декораторов"""
     return field.as_widget(attrs={'class': css})

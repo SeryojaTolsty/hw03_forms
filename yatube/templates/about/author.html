@@ -1,14 +1,54 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}Об авторе проекта{% endblock %}
 {% block content %}
-<div class="container py-5">
-  <h1>
-    Привет, я автор
-  </h1>
-  <p>
-    Тут я размещу информацию о себе, используя свои умения верстать.
-    Картинки, блоки, элементы бустрап. А может быть, просто напишу
-    несколько абзацев текста.
-  </p>
-</div>
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="card text-center">
+        <div class="card-header">
+          Меня зовут Сергей. Пытаюсь не выжить из ума с
+          яндехом (но, видимо, уже не срослось).<br>
+          Ввиду этого, проходя программу,
+          в тестовой странице,<br>
+          которую меня просили сделать в одном из уроков, я написал загадку.
+          Она совсем несложная, сродни учёбе в яндехе.<br>
+          Ключ к загадке лежит в имени Октавиана Августа.
+        </div>
+        <div class="card-body">
+          <img
+            class="card-img-top"
+            src="{% static 'img/author.png' %}"
+            alt="Card image cap"
+            style="max-height: 300px; width: auto; border-radius: 12px;"
+          >
+          <p></p>
+          <h5 class="card-title">Тут я размещу информацию о себе, используя свои умения верстать.</h5>
+          <p class="card-text">Картинки, блоки, элементы бустрап. А может быть, просто напишу несколько абзацев текста.</p>
+          <a href="https://github.com/discoveryline" class="btn btn-primary">Go to GitHub</a>
+        </div>
+        <div class="card-footer text-muted"></div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="card text-center">
+        <div class="card-header">
+
+        </div>
+        <div class="card-body">
+          <img
+            class="card-img-top"
+            src="{% static 'img/logo.png' %}"
+            alt="Card image cap"
+            style="height: 300px; width: auto; border-radius: 12px;"
+          >
+          <p></p>
+          <h5 class="card-title">Тут я размещу информацию о себе, используя свои умения верстать.</h5>
+          <p class="card-text">Картинки, блоки, элементы бустрап. А может быть, просто напишу несколько абзацев текста..
+          <br><br><br>В следующем спринте загадка будет куда интереснее.</p>
+          <a href="https://practicum.yandex.ru/" class="btn btn-primary">Go to Yandex</a>
+        </div>
+        <div class="card-footer text-muted"></div>
+      </div>
+    </div>
+  </div>
 {% endblock %}

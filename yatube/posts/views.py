@@ -6,7 +6,8 @@ from .models import Group, Post, User
 from .utils import paginate_page
 
 
-POST_PER_PAGE = 10
+LR = 10
+# LR - LIMIT_RANGE (количество постов на странице)
 
 
 def index(request):
