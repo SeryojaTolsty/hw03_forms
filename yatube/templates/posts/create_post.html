@@ -1,32 +1,47 @@
-{% extends 'base.html' %}
-  {% block title %}
+{% extends "base.html" %}
+
+{% block title %}
+  {% if is_edit %}
+    Редактирование поста
+  {% else %}
     Новый пост
-  {% endblock %}
+  {% endif %}
+{% endblock %}
+
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8 p-5">
-      <div class="card">
-        <div class="card-header">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8 p-5">
+        <div class="card">
+          <div class="card-header">
             {% if is_edit %}
-                Редактировать запись
+              Редактирование поста
             {% else %}
-                Добавить запись
+              Новый пост
             {% endif %}
-        </div>
-        <div class="card-body">
-            {% include 'includes/form.html' %}
-            <div class="d-flex justify-content-end">
-              <button type="submit" class="btn btn-primary">
+          </div>
+          <div class="card-body">
+            {% include 'includes/forms/fields_if_form_errors.html' %}
+            <form method="post"
+              {% if action_url %}
+                action="{% url action_url %}"
+              {% endif %}
+            >
+              {% csrf_token %}
+              {% include 'includes/forms/fields_in_post_form.html' %}
+              <div class="col-md-6 offset-md-4">
+                <button type="submit" class="btn btn-primary">
                   {% if is_edit %}
                     Сохранить
                   {% else %}
                     Добавить
                   {% endif %}
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-</div>
+                </button>
+              </div>
+            </form>
+          </div> <!-- card body -->
+        </div> <!-- card -->
+      </div> <!-- col -->
+    </div> <!-- row -->
+  </div>
 {% endblock %}
