@@ -6,10 +6,6 @@ from .models import Group, Post, User
 from .utils import paginate_page
 
 
-LR = 10
-# LR - LIMIT_RANGE (количество постов на странице)
-
-
 def index(request):
     post_list = Post.objects.all()
     page_obj = paginate_page(request, post_list)
@@ -70,8 +66,6 @@ def post_edit(request, post_id):
 
     form = PostForm(request.POST or None, instance=post)
     if form.is_valid():
-        post = form.save(commit=False)
-        post.author = request.user
         post.save()
         return redirect('posts:post_detail', post_id)
 
