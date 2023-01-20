@@ -1,7 +1,12 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+# from pytils.translit import slugify
 
 User = get_user_model()
+
+
+LEN_OF_POSTS = 15
+# константа длины строки
 
 
 class Group(models.Model):
@@ -19,23 +24,28 @@ class Group(models.Model):
         verbose_name='Описание',
     )
 
+    class Meta:
+        verbose_name = 'Жанр'
+        ordering = ('title',)
+
     def __str__(self):
         return self.title
 
 
 class Post(models.Model):
     text = models.TextField(
-        verbose_name='Текст поста',
+        'Текст поста',
+        help_text='Введите текст поста',
     )
     pub_date = models.DateTimeField(
+        'Дата публикации',
         auto_now_add=True,
-        verbose_name='Дата публикации',
     )
     author = models.ForeignKey(
         User,
-        related_name='posts',
-        verbose_name='Автор публикации',
+        verbose_name='Автор',
         on_delete=models.CASCADE,
+        related_name='posts',
     )
     group = models.ForeignKey(
         Group,
@@ -44,10 +54,12 @@ class Post(models.Model):
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
+        help_text='Группа, относительно поста'
     )
 
     class Meta:
-        ordering = ('-pub_date',)
+        verbose_name = 'Пост'
+        ordering = ('-pub_date', 'author')
 
     def __str__(self,):
-        return self.text[:15]
+        return self.text[:LEN_OF_POSTS]
