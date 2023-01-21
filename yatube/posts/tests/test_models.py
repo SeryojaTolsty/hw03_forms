@@ -15,19 +15,9 @@ class PostModelTest(TestCase):
         super().setUpClass()
         cls.user = User.objects.create_user(username='test_user')
         cls.post = Post.objects.create(
-            text='Тестовый текст больше 15 символов для проверки...',
+            text='Тестовый текст (строка 15 символов)',
             author=cls.user,
         )
-        cls.post_model_field_to_verbose = {
-            'text': 'Текст поста',
-            'pub_date': 'Дата публикации',
-            'author': 'Автор',
-            'group': 'Группа',
-        }
-        cls.post_model_field_to_help = {
-            'text': 'Введите текст поста',
-            'group': 'Группа, относительно поста',
-        }
 
     def test_post_str(self):
         """Проверка __str__ у post."""
@@ -35,17 +25,30 @@ class PostModelTest(TestCase):
 
     def test_post_verbose_name(self):
         """Проверка verbose_name у post."""
+        self.post_model_field_to_verbose = {
+            'text': 'Текст поста',
+            'pub_date': 'Дата публикации',
+            'author': 'Автор',
+            'group': 'Группа',
+        }
         for (
             value,
             expected,
-        ) in PostModelTest.post_model_field_to_verbose.items():
+        ) in self.post_model_field_to_verbose.items():
             with self.subTest(value=value):
                 verbose_name = self.post._meta.get_field(value).verbose_name
                 self.assertEqual(verbose_name, expected)
 
     def test_post_help_text(self):
         """Проверка help_text у post."""
-        for value, expected in PostModelTest.post_model_field_to_help.items():
+        self.post_model_field_to_help = {
+            'text': 'Введите текст поста',
+            'group': 'Группа, относительно поста',
+        }
+        for (
+            value,
+            expected
+        ) in self.post_model_field_to_help.items():
             with self.subTest(value=value):
                 help_text = self.post._meta.get_field(value).help_text
                 self.assertEqual(help_text, expected)
