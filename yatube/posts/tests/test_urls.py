@@ -5,15 +5,16 @@ from django.urls import reverse
 from http import HTTPStatus
 
 from ..models import Group, Post, User
+from .constants import (
+    AUTHOR_USERNAME,
+    GROUP_SLUG,
+    URL_INDEX,
+    URL_GROUP,
+    URL_AUTHOR_PROFILE,
+    URL_CREATE_POST,
+)
 
 User = get_user_model()
-
-AUTHOR_USERNAME = "test_user"
-GROUP_SLUG = "test_slug"
-URL_INDEX = reverse("posts:index")
-URL_GROUP = reverse("posts:group_list", args=[GROUP_SLUG])
-URL_AUTHOR_PROFILE = reverse("posts:profile", args=[AUTHOR_USERNAME])
-URL_CREATE_POST = reverse("posts:post_create")
 
 
 class PostURLTests(TestCase):
@@ -63,7 +64,7 @@ class PostURLTests(TestCase):
             self.assertEqual(
                 client.get(adress).status_code,
                 status,
-                f"{adress} вернул другой статус код. Нежели {status}",
+                f"{adress} вернул другой статус код, нежели {status}",
             )
 
     def test_task_list_url_redirect_anonymous(self):
